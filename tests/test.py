@@ -1,6 +1,9 @@
 import os, sys
 import unittest
 
+import qrcode
+from PIL import Image
+
 from os.path import dirname, join, abspath
 sys.path.insert(0, abspath(join(dirname(__file__), '../src/pyPayNowSg')))
 
@@ -23,7 +26,20 @@ class TestPayload(unittest.TestCase):
         result = PayNowSerializer.serialize("NATIONAL HEALTHCARE GRO", merchant_info)
         self.assertEqual(result, TEST_CODE_1)
 
+        img = qrcode.make(result)
+        img.save("test_generate_image.png")
+
+        img = Image.open('test_generate_image.png', 'r')
+
+        img_w, img_h = img.size
+        logo = Image.radial_gradient("L")
+        logo = logo.resize((192, 192))
+
+        bg_w, bg_h = logo.size
+        offset = ((img_w - bg_w) // 2, (img_h - bg_h) // 2)
+        img.paste(logo, offset)
+        img.save('out.png')
+
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPayload)
     unittest.TextTestRunner(verbosity=2).run(suite)
-
