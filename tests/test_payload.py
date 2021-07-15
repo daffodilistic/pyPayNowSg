@@ -4,12 +4,12 @@ import unittest
 import qrcode
 from PIL import Image
 
-from os.path import dirname, join, abspath
-sys.path.insert(0, abspath(join(dirname(__file__), '../src/pyPayNowSg')))
-
-from pyPayNowSg import *
+from pyPayNowSg import PayNowConfigFactory, PayNowSerializer
 
 # Woodbridge Hospital Charity Fund
+# We're using this as a sample because it is shown on their website
+# at https://www.imh.com.sg/page.aspx?id=120, and in case anyone tries
+# to test a payment, the money goes to a good cause
 TEST_CODE_1 = "00020101021126400009SG.PAYNOW010120213200002150HWCF030115204000053037025802SG5923NATIONAL HEALTHCARE GRO6009Singapore6304DF3F"
 
 class TestPayload(unittest.TestCase):
