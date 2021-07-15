@@ -1,5 +1,3 @@
-#!/usr/bin/env python2
-# NOTE Code should work in python 3 as well (tested on v3.9.4)
 # -*- coding: utf-8 -*-
 
 import sys
