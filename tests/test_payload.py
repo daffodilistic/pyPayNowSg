@@ -4,7 +4,7 @@ import unittest
 import qrcode
 from PIL import Image
 
-from pyPayNowSg import PayNowConfigFactory, PayNowSerializer
+from pyPayNowSg.pyPayNowSg import PayNowConfigFactory, PayNowSerializer
 
 # Woodbridge Hospital Charity Fund
 # We're using this as a sample because it is shown on their website
