@@ -194,7 +194,6 @@ setup(
     # what's used to render the link text on PyPI.
     project_urls={  # Optional
         'Bug Reports': 'https://github.com/daffodilistic/pyPayNowSg/issues',
-        'Say Thanks!': 'http://saythanks.io/to/example',
         'Source': 'https://github.com/daffodilistic/pyPayNowSg',
     },
 )
