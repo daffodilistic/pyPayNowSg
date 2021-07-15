@@ -23,7 +23,10 @@ class TestPayload(unittest.TestCase):
             True
         )
 
-        result = PayNowSerializer.serialize("NATIONAL HEALTHCARE GRO", merchant_info)
+        result = PayNowSerializer.serialize(
+            "NATIONAL HEALTHCARE GRO",
+            merchant_info
+        )
         self.assertEqual(result, TEST_CODE_1)
 
         img = qrcode.make(result)
