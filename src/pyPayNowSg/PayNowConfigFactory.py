@@ -1,51 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import sys
-import crcmod
-
-class EMVCoDataHeader:
-    PAYLOAD_FORMAT = 0
-    POI_METHOD = 1
-    MERCHANT_ACCOUNT_INFO = 26
-    MCC = 52
-    CURRENCY = 53
-    TXN_AMOUNT = 54
-    COUNTRY_CODE = 58
-    MERCHANT_NAME = 59
-    MERCHANT_CITY = 60
-    ADDITIONAL_DATA = 62
-    CRC = 63
-
-class EMVCoMerchantAccountInfo:
-    GUID = 0
-
-class EMVCoSerializer:
-    @staticmethod
-    def serialize(header_id, value):
-        """Serializes a given value and header ID to a string
-
-        Args:
-            header_id (int): Header ID of the data object
-            value (string): Data value
-
-        Returns:
-            string: Serialized string in the format [header][data length][data]
-        """
-        if ((value != None) & (value != "")):
-            packed_data = "{:02}{:02}{}".format(
-                header_id,
-                len(str(value)),
-                value
-            )
-            return packed_data
-        else:
-            return ""
-
-class PayNowMerchantAccountInfo(EMVCoMerchantAccountInfo):
-    PROXY_TYPE = 1
-    PROXY_VALUE = 2
-    EDITABLE_TXN = 3
-    QR_CODE_EXPIRY = 4
+from pyPayNowSg.EMVCoHeaders import EMVCoDataHeader
+from pyPayNowSg.EMVCoSerializer import EMVCoSerializer
+from pyPayNowSg.PayNowHeaders import PayNowMerchantAccountInfo
 
 class PayNowConfigFactory:
     # Reference: ISO 4217
@@ -157,58 +114,3 @@ class PayNowConfigFactory:
             (PayNowConfigFactory.ADDITIONAL_DATA_TYPE_BILL, text)
         ]
         return additional_data
-
-class PayNowSerializer:
-    @staticmethod
-    def serialize(merchant_name, merchant_info, amount=None, additional_info=None):
-        """Serializes 
-
-        Args:
-            amount (string): Amount to be pre-filled. Defaults to None.
-            name (string): Name of merchant to be displayed.
-            merchant_info (list): A list of tuples generated from
-            PayNowConfigFactory.build_merchant_account_info().
-            additional_info (list, optional): A list of tuples generated from
-            PayNowConfigFactory.build_additional_data(). Defaults to None.
-
-        Returns:
-            string: A PayNow string which can be converted to a QR code.
-        """
-        payload = PayNowConfigFactory.build_payload(
-            poi_method=11,
-            txn_amount=amount,
-            merchant_name=merchant_name,
-            merchant_account_info=merchant_info,
-            additional_data=additional_info
-        )
-        payload_string = ""
-        for data in payload:
-            payload_string += EMVCoSerializer.serialize(data[0],data[1])
-
-        crc16 = crcmod.mkCrcFun(0x11021, rev=False)
-        plaintext = payload_string + str(EMVCoDataHeader.CRC) + "04"
-        crcmod_plaintext = PayNowSerializer.__crcmod_string(plaintext)
-        checksum = '{:04X}'.format(crc16(crcmod_plaintext)) 
-        output = plaintext + checksum
-        return output
-
-    @staticmethod
-    def __crcmod_string(source):
-        """Converts a string to be compatible for use with crcmod functions
-
-        Args:
-            source (string): A native string type on either Python 2 or 3
-
-        Returns:
-            string: A string compatible with crcmod.mkCrcFun() function
-        """
-        unicode_type = u''.__class__
-        PY3 = sys.version_info[0] == 3
-        if PY3:
-            unicode_type = str
-
-        if isinstance(source, unicode_type):
-            # Note that EMVCo specs only allows ASCII
-            source = source.encode("ascii", "strict")
-        return source
-
