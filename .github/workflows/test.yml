@@ -3,11 +3,11 @@ name: Test
 on:
   push:
     branches:
-      - main
       - master
+      - dev/workflow-test
+      - preflight
   pull_request:
     branches:
-      - main
       - master
 
 jobs:
