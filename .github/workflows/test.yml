@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - dev/workflow-test
-      - preflight
+      - release
   pull_request:
     branches:
       - master
