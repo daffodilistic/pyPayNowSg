@@ -3,7 +3,6 @@ name: Test
 on:
   push:
     branches:
-      - master
       - dev/workflow-test
       - preflight
   pull_request:
