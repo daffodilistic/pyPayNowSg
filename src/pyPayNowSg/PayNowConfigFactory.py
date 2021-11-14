@@ -65,7 +65,7 @@ class PayNowConfigFactory:
 
     @staticmethod
     def build_merchant_account_info(
-        proxy_type=None,
+        proxy_type=2,
         proxy_value=None,
         editable_txn=True,
         expiry_date=None
@@ -74,7 +74,7 @@ class PayNowConfigFactory:
 
         Args:
             proxy_type (int, optional): Indicates how this QR code is linked.
-            Defaults to None. Possible values are:
+            Defaults to 2 (UEN). Possible values are:
                 0 - mobile number
                 1 - unknown (NRIC?)
                 2 - UEN
@@ -92,7 +92,7 @@ class PayNowConfigFactory:
         """
         account_info = [
             (PayNowMerchantAccountInfo.GUID, PayNowConfigFactory.GUID_NAME),
-            (PayNowMerchantAccountInfo.PROXY_TYPE, 2),
+            (PayNowMerchantAccountInfo.PROXY_TYPE, proxy_type),
             (PayNowMerchantAccountInfo.PROXY_VALUE, proxy_value),
             (PayNowMerchantAccountInfo.EDITABLE_TXN, int(editable_txn)),
             (PayNowMerchantAccountInfo.QR_CODE_EXPIRY, expiry_date)
